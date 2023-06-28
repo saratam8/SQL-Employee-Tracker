@@ -61,7 +61,7 @@ function addDepartment() {
             message: 'What is the name of the department?'
         })
         .then((response) =>
-        console.log(response)
+            db.promise().query(`INSERT INTO department (name) VALUES ('${response.department}')`)
         );
 };
 
@@ -85,7 +85,7 @@ function addRole() {
             },
         ])
         .then((response) =>
-        console.log(response)
+            db.promise().query(`INSERT INTO employee_role (title, salary, department_id) VALUES ('${response.role}', ${response.salary}, ${response.department})`)
         );
 };
 
@@ -114,7 +114,7 @@ function addEmployee() {
             },
         ])
         .then((response) =>
-        console.log(response)
+            db.promise().query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${response.firstname}', '${response.lastname}', '${response.role}', '${response.manager}')`)
         );
 };
 
