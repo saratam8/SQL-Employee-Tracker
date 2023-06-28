@@ -133,6 +133,6 @@ function updateEmployee() {
             },
         ])
         .then((response) =>
-        console.log(response)
+            db.promise().query(`INSERT INTO department (name) VALUES ('${response.department}')`)
         );
 };
