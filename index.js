@@ -1,7 +1,7 @@
-const inquirer = require('inquire');
+const inquirer = require('inquirer');
 const generateOption = require('./lib/options.js');
-const mysql = require('mysql2');
-const db = require("./db")
+
+const db = require('./db/connection.js');
 
 const tablePrompt = {
     type: 'list',
@@ -20,28 +20,33 @@ const tablePrompt = {
 
 inquirer
     .prompt(tablePrompt).then((response) => {
-        const {choice} = response;
-        if (choice === "View all departments") {
+        // const {choice} = response;
+        console.log(response.display);
+        if (response.display == "View all departments") {
+            console.log("here");
             db.query('SELECT * FROM department', function(err, results) {
                 console.table(results);
             });
         }
-        else if (choice === "View all roles") {
+        else if (response.display === "View all roles") {
 
         }
-        else if (choice === "View all employees") {
+        else if (response.display === "View all employees") {
 
         }
-        else if (choice === "Add a department") {
+        else if (response.display === "Add a department") {
 
         }
-        else if (choice === "Add a role") {
+        else if (response.display === "Add a role") {
 
         }
-        else if (choice === "Add an employee") {
+        else if (response.display === "Add an employee") {
 
         }
-        else if (choice === "Update an employee role") {
+        else if (response.display === "Update an employee role") {
 
+        }
+        else {
+            console.log("Need response");
         }
     });
