@@ -29,10 +29,7 @@ CREATE TABLE employee (
     manager_id INT,
     PRIMARY KEY (id),
     FOREIGN KEY (role_id)
-    REFERENCES employee_role(id)
-);
-
-ALTER TABLE employee 
+    REFERENCES employee_role(id),
     FOREIGN KEY (manager_id)
     REFERENCES employee(id)
-;
+);
