@@ -5,13 +5,14 @@ CREATE DATABASE business_db;
 USE business_db;
 
 CREATE TABLE department (
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     PRIMARY KEY (id)
 );
 
+-- does not like it when CREATE TABLE role is used --
 CREATE TABLE employee_role (
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
     title VARCHAR(30),
     salary DECIMAL(6, 0),
     department_id INT,
@@ -21,7 +22,7 @@ CREATE TABLE employee_role (
 );
 
 CREATE TABLE employee (
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     role_id INT,
@@ -30,3 +31,8 @@ CREATE TABLE employee (
     FOREIGN KEY (role_id)
     REFERENCES employee_role(id)
 );
+
+ALTER TABLE employee 
+    FOREIGN KEY (manager_id)
+    REFERENCES employee(id)
+;
