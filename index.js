@@ -1,5 +1,4 @@
 const inquirer = require('inquirer');
-const generateOption = require('./lib/options.js');
 
 const db = require('./db/connection.js');
 
@@ -7,6 +6,7 @@ var departmentList = [];
 var roleList = [];
 var employeeList = [];
 
+// Create array of the existing departments from the database
 function populateDepartmentData() {
     db.query('SELECT * FROM department', function(err, results) {
         for(var i = 0; i < results.length; i++){
@@ -15,6 +15,7 @@ function populateDepartmentData() {
     });
 };
 
+// Create array of the existing employee roles from the database
 function populateRoleData() {
     db.query('SELECT * FROM employee_role', function(err, results) {
         for(var i = 0; i < results.length; i++){
@@ -23,6 +24,7 @@ function populateRoleData() {
     });
 };
 
+// Create array of the existing employees from the database
 function populateEmployeeData() {
     db.query('SELECT * FROM employee', function(err, results) {
         for(var i = 0; i < results.length; i++){
@@ -31,6 +33,7 @@ function populateEmployeeData() {
     });
 };
 
+// Initial Prompt
 const tablePrompt = {
     type: 'list',
     name: 'display',
@@ -46,8 +49,10 @@ const tablePrompt = {
     ],
 };
 
+// Start the first inquirer prompt
 startPrompt();
 
+// Main inquirer prompt
 function startPrompt() {
     inquirer
         .prompt(tablePrompt).then((response) => {
@@ -88,6 +93,7 @@ function startPrompt() {
         });
 };
 
+// Add department into the database using user input from a follow up inquirer prompt
 function addDepartment() {
     inquirer
         .prompt({
@@ -101,6 +107,7 @@ function addDepartment() {
         .then(() => startPrompt());
 };
 
+// Add role into the database using user input from a follow up inquirer prompt
 function addRole() {
     inquirer
         .prompt([
@@ -126,11 +133,13 @@ function addRole() {
         )
 };
 
+// query to add new role to the database
 function createNewRole(data){
     db.promise().query(`INSERT INTO employee_role (title, salary) VALUES ('${data.role}', ${data.salary})`)
     .then(() => startPrompt());
 }
 
+// Add employee into the database using user input from a follow up inquirer prompt
 function addEmployee() {
     inquirer
         .prompt([
@@ -161,12 +170,14 @@ function addEmployee() {
         );
 };
 
+// Insert the new employee into the database
 function addNewEmployee(data) {
     db.promise().query(`INSERT INTO employee (first_name, last_name) VALUES ('${data.firstname}', '${data.lastname}')`)
     // , '${data.role}', '${data.manager}'
     .then(() => startPrompt());
 };
 
+// Update employee into the database using user input from a follow up inquirer prompt
 function updateEmployee() {
     inquirer
         .prompt([
@@ -188,6 +199,7 @@ function updateEmployee() {
         );
 };
 
+// Supposed to update the database
 function updateEmployeeInfo(data) {
     // db.promise().query(`UPDATE employee SET role_id = 1 WHERE id = 1`)
     // .then(() => startPrompt());
