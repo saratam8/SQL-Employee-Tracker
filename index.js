@@ -46,49 +46,48 @@ const tablePrompt = {
     ],
 };
 
-inquirer
-    .prompt(tablePrompt).then((response) => {
-        console.log(response.display);
-        if (response.display == "View all departments") {
-            db.query('SELECT * FROM department', function(err, results) {
-                console.table(results);
-                console.log(results[0].name);
-                // for(var i = 0; i < results.length; i++){
-                //     departmentList[i] = results[i].name;
-                // }
-                // console.log(departmentList);
-            });
-        }
-        else if (response.display === "View all roles") {
-            db.query('SELECT * FROM employee_role', function(err, results) {
-                console.table(results);
-            });
-        }
-        else if (response.display === "View all employees") {
-            db.query('SELECT * FROM employee', function(err, results) {
-                console.table(results);
-            });
-        }
-        else if (response.display === "Add a department") {
-            addDepartment();
-        }
-        else if (response.display === "Add a role") {
-            populateDepartmentData()
-            addRole();
-        }
-        else if (response.display === "Add an employee") {
-            populateRoleData();
-            addEmployee();
-        }
-        else if (response.display === "Update an employee role") {
-            populateEmployeeData();
-            populateRoleData();
-            updateEmployee();
-        }
-        else {
-            console.log("Need response");
-        }
-    });
+startPrompt();
+
+function startPrompt() {
+    inquirer
+        .prompt(tablePrompt).then((response) => {
+            console.log(response.display);
+            if (response.display == "View all departments") {
+                db.promise().query('SELECT * FROM department')
+                .then (([results]) => console.table(results))
+                .then(() => startPrompt());
+            }
+            else if (response.display === "View all roles") {
+                db.promise().query('SELECT * FROM employee_role')
+                .then (([results]) => console.table(results))
+                .then(() => startPrompt());
+            }
+            else if (response.display === "View all employees") {
+                db.promise().query('SELECT * FROM employee') 
+                .then (([results]) => console.table(results))
+                .then(() => startPrompt());
+            }
+            else if (response.display === "Add a department") {
+                addDepartment();
+            }
+            else if (response.display === "Add a role") {
+                populateDepartmentData()
+                addRole();
+            }
+            else if (response.display === "Add an employee") {
+                populateRoleData();
+                addEmployee();
+            }
+            else if (response.display === "Update an employee role") {
+                populateEmployeeData();
+                populateRoleData();
+                updateEmployee();
+            }
+            else {
+                console.log("Need response");
+            }
+        });
+};
 
 function addDepartment() {
     inquirer
@@ -99,7 +98,8 @@ function addDepartment() {
         })
         .then((response) =>
             db.promise().query(`INSERT INTO department (name) VALUES ('${response.department}')`)
-        );
+        )
+        .then(() => startPrompt());
 };
 
 function addRole() {
@@ -131,6 +131,7 @@ function createNewRole(data){
     // db.promise().query(`SELECT name FROM department WHERE name in ${data.department}`);
     console.log(data);
     db.promise().query(`INSERT INTO employee_role (title, salary) VALUES ('${data.role}', ${data.salary})`)
+    .then(() => startPrompt());
 }
 
 function addEmployee() {
@@ -165,8 +166,9 @@ function addEmployee() {
 
 function addNewEmployee(data) {
     console.log(data);
-    db.promise().query(`INSERT INTO employee (first_name, last_name) VALUES ('${data.firstname}', '${data.lastname}')`);
+    db.promise().query(`INSERT INTO employee (first_name, last_name) VALUES ('${data.firstname}', '${data.lastname}')`)
     // , '${data.role}', '${data.manager}'
+    .then(() => startPrompt());
 };
 
 function updateEmployee() {
@@ -192,4 +194,5 @@ function updateEmployee() {
 
 function updateEmployeeInfo(data) {
     // db.promise().query(`UPDATE employee SET role_id = 1 WHERE id = 1`)
+    // .then(() => startPrompt());
 };
