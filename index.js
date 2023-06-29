@@ -51,7 +51,6 @@ startPrompt();
 function startPrompt() {
     inquirer
         .prompt(tablePrompt).then((response) => {
-            console.log(response.display);
             if (response.display == "View all departments") {
                 db.promise().query('SELECT * FROM department')
                 .then (([results]) => console.table(results))
@@ -124,12 +123,10 @@ function addRole() {
         ])
         .then((response) =>
             createNewRole(response)
-        );
+        )
 };
 
 function createNewRole(data){
-    // db.promise().query(`SELECT name FROM department WHERE name in ${data.department}`);
-    console.log(data);
     db.promise().query(`INSERT INTO employee_role (title, salary) VALUES ('${data.role}', ${data.salary})`)
     .then(() => startPrompt());
 }
@@ -165,7 +162,6 @@ function addEmployee() {
 };
 
 function addNewEmployee(data) {
-    console.log(data);
     db.promise().query(`INSERT INTO employee (first_name, last_name) VALUES ('${data.firstname}', '${data.lastname}')`)
     // , '${data.role}', '${data.manager}'
     .then(() => startPrompt());
